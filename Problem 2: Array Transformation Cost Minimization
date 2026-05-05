@@ -1,0 +1,69 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+int abs_val(int x) {
+    return (x < 0) ? -x : x;
+}
+
+int cmp(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
+
+int minOperations(int arr[], int n, int k) {
+    qsort(arr, n, sizeof(int), cmp);
+
+    int ans = 1000000000; // large value
+
+    for (int i = 0; i < n; i++) {
+        int target = arr[i];
+        int ops = 0;
+        int possible = 1;
+
+        for (int j = 0; j < n; j++) {
+            int diff = abs_val(arr[j] - target);
+
+            if (diff % k != 0) {
+                possible = 0;
+                break;
+            }
+
+            ops += diff / k;
+        }
+
+        if (possible) {
+            ans = min(ans, ops);
+        }
+    }
+
+    return (ans == 1000000000) ? -1 : ans;
+}
+
+int main() {
+    int n, k;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    int arr[100005];
+    printf("Enter array elements: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &arr[i]);
+    }
+
+    printf("Enter value of K: ");
+    scanf("%d", &k);
+
+    int result = minOperations(arr, n, k);
+
+    if (result == -1) {
+        printf("Transformation not possible\n");
+    } else {
+        printf("Minimum operations required: %d\n", result);
+    }
+
+    return 0;
+}
